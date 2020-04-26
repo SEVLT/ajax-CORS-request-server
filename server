@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+var http = require('http');
+var fs = require('fs');
+var url = require('url');
+var port = process.argv[2];
+
+if (!port) {
+    console.log('请指定一个端口');
+    process.exit(1);
+}
+
+var server = http.createServer(function (request, response) {
+    var parsedUrl = url.parse(request.url, true);
+    var pathWithQuery = request.url;
+    var queryString = '';
+    if (pathWithQuery.indexOf('?') >= 0) {
+        queryString = pathWithQuery.substring(pathWithQuery.indexOf('?'));
+    }
+    var path = parsedUrl.pathname;
+    var query = parsedUrl.query;
+    var method = request.method;
+
+    //主要代码从此处开始
+
+    console.log('方方说：含查询字符串的路径\n' + pathWithQuery);
+
+    if (path === '/') {
+        let string = fs.readFileSync('./index.html', 'utf8');
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/html;charset=utf-8');
+        response.write(string);
+        response.end();
+    } else if (path === '/main.js') {
+        let string = fs.readFileSync('./main.js', 'utf8');
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/javascript;charset=utf-8');
+        response.write(string);
+        response.end();
+    } else if (path === '/xxx') {
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'text/json;charset=utf-8');
+        //允许 8001 页面向 8002 页面发起请求
+        response.setHeader(
+            'Access-Control-Allow-Origin',
+            'http://localhost:8001'
+        );
+        response.write(`{	
+				"note":{
+					"to":"zjx",
+					"form":"sq",
+					"heading":"打招呼",
+					"content":"hello
+				}			
+		}`);
+        response.end();
+    } else {
+        response.statusCode = 404;
+        response.setHeader('Content-Type', 'text/html;charset=utf-8');
+        response.write(`
+			{
+				"error": "not found"
+			}
+			`);
+        response.end();
+    }
+
+    //主要代码从此处结束
+});
+
+server.listen(port);
+console.log('监听 ' + port + ' 成功，请在浏览器打开 http://localhost:' + port);
+
+// else if (path === '/xxx') {
+//         response.statusCode = 200;
+//         response.setHeader('Content-Type', 'text/json;charset=utf-8');
+//         response.setHeader(
+//             'Access-Control-Allow-Origin',
+//             'http://frank.com:8001'
+//         );
+//         response.write(`
+// 			{
+// 				"note":{
+// 					"to": "小谷",
+// 					"from": "方方",
+// 					"heading": "打招呼",
+// 					"content": "hi"
+// 					}
+// 			}
+// 		`);
+//         response.end();
+//     }
