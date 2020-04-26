@@ -69,23 +69,3 @@ var server = http.createServer(function (request, response) {
 
 server.listen(port);
 console.log('监听 ' + port + ' 成功，请在浏览器打开 http://localhost:' + port);
-
-// else if (path === '/xxx') {
-//         response.statusCode = 200;
-//         response.setHeader('Content-Type', 'text/json;charset=utf-8');
-//         response.setHeader(
-//             'Access-Control-Allow-Origin',
-//             'http://frank.com:8001'
-//         );
-//         response.write(`
-// 			{
-// 				"note":{
-// 					"to": "小谷",
-// 					"from": "方方",
-// 					"heading": "打招呼",
-// 					"content": "hi"
-// 					}
-// 			}
-// 		`);
-//         response.end();
-//     }
