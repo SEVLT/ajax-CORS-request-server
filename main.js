@@ -21,4 +21,3 @@ button.addEventListener('click', () => {
         }
     };
 });
-//1
